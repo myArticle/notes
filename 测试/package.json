@@ -1,0 +1,14 @@
+{
+  "name": "jest-demo",
+  "version": "1.0.0",
+  "description": "jest测试模块探究学习",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.4.3"
+  }
+}
