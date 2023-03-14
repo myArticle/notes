@@ -1,4 +1,6 @@
-# [测试——摘抄自 Vue 官网](https://cn.vuejs.org/guide/scaling-up/testing.html)
+# [测试](https://cn.vuejs.org/guide/scaling-up/testing.html)
+
+[`jest`](https://jestjs.io/zh-Hans/), [`vite`](https://vitejs.cn/vite3-cn/guide/), [`vitest`](https://vitest.dev/guide/), [`Headless UI`](https://headlessui.com/)
 
 ## 为什么需要测试
 
@@ -150,6 +152,115 @@ Ran all test suites.
 ### 组合式函数
 
 有一类 Vue 应用中特有的函数被称为 [组合式函数](https://cn.vuejs.org/guide/reusability/composables.html)，在测试过程中可能需要特殊处理。
+
+当涉及到测试组合式函数时，我们可以根据是否依赖宿主组件实例把它们分为两类。
+
+当一个组合式函数使用以下 API 时，它依赖于一个宿主组件实例：
+
+- 生命周期钩子
+- 供给/注入
+
+如果一个组合式程序只使用响应式 API，那么它可以通过直接调用并断言其返回的状态或方法来进行测试。
+
+```javascript
+// counter.js
+import { ref } from 'vue'
+
+export function useCounter() {
+    const count = ref(0)
+    const increment = () => count.value++
+
+    return {
+        count,
+        increment
+    }
+}
+```
+
+```javascript
+// counter.test.js
+import { test, expect } from 'vitest'
+import { useCounter } from './counter.js'
+
+test('useCounter', () => {
+    const { count, increment } = useCounter()
+    expect(count.value).toBe(0)
+
+    increment()
+    expect(count.value).toBe(1)
+})
+```
+
+一个依赖生命周期钩子或供给/注入的组合式函数需要被包装在一个宿主组件中才可以测试。
+
+- 首先添加 Vitest 到项目中
+
+  >npm install -D vitest happy-dom @testing-library/vue
+
+- 接着，更新你的 Vite 配置，添加上 test 选项：
+
+  ```javascript
+  // vite.config.ts
+  test: {
+    // 启用类似 jest 的全局测试 API
+    globals: true,
+    // 使用 happy-dom 模拟 DOM
+    // 这需要你安装 happy-dom 作为对等依赖（peer dependency）
+    environment: 'happy-dom'
+  },
+  ```
+
+- `foo.test-utils.js`
+
+  ```javascript
+  import { createApp } from 'vue'
+  export function withSetup(composable) {
+    let result
+    const app = createApp({
+        setup() {
+            result = composable()
+            // 忽略模板警告
+            return () => { }
+        }
+    })
+    app.mount(document.createElement('div'))
+    // 返回结果与应用实例
+    // 用来测试供给和组件卸载
+    return [result, app]
+  }
+  ```
+
+- `foo.js`
+
+  ```javascript
+  import { ref } from 'vue'
+  export function useFoo(val = 0) {
+    const foo = ref(val)
+
+    return {
+        foo,
+    }
+  }
+  ```
+
+- `foo.test.js`
+
+  ```javascript
+  import { withSetup } from './foo.test-utils'
+  import { useFoo } from './foo'
+
+  test('useFoo', () => {
+    const [result, app] = withSetup(() => useFoo(123))
+    // 为注入的测试模拟一方供给
+    app.provide()
+    // 执行断言
+    expect(result.foo.value).toBe(1)
+    // 如果需要的话可以这样触发
+    app.unmount()
+  })
+  ```
+
+对于更复杂的组合式函数，通过使用**组件测试**编写针对这个包装器组件的测试，这会容易很多。
 
 
 ### 组件的单元测试
