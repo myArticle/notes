@@ -391,6 +391,20 @@ Vitest 和基于浏览器的运行器之间的主要区别是速度和执行上�
 - [Nightwatch v2](https://v2.nightwatchjs.org/) 是一个基于 [Selenium WebDriver](https://www.npmjs.com/package/selenium-webdriver) 的端到端测试解决方案。它的浏览器品类支持范围是最广的。
 
 
+## 部分前端框架的测试框架选择
+
+| 框架 | 测试框架 | 测试文件、用例条数、(快照) |
+| - | - | - |
+| vue3 | vitest | Test Files  9 failed \| 165 passed (174) <br/> Tests 12 failed \| 2593 passed (2647) |
+| react | jest | Test Suites: 2 skipped, 294 passed, 294 of 296 total <br/> Tests: 91 skipped, 7704 passed, 7795 total <br/> Snapshots:   176 passed, 176 total |
+| nutui | jest | Test Suites: 7 failed, 77 passed, 84 total <br/> Tests:       6 failed, 442 passed, 448 total  <br/> Snapshots:   6 updated, 66 passed, 72 total |
+| element-plus | vitest | Test Files  138 passed (138) <br/> Tests  1504 passed (1504) |
+| vant | jest | Test Suites: 169 passed, 169 total <br/> Tests:       964 passed, 964 total <br/> Snapshots:   392 passed, 392 total |
+| ant-design | jest | Test Suites: 325 passed, 325 total <br/> Tests:       29 skipped, 4150 passed, 4179 total <br/> Snapshots:   2346 passed, 2346 total |
+| formily | jest | Test Suites: 37 failed, 22 passed, 59 total <br/> Tests:       314 passed, 314 total <br/> Snapshots:   0 total |
+
+
+
 ## 参考
 
 - [Vue 官网 测试篇](https://cn.vuejs.org/guide/scaling-up/testing.html)

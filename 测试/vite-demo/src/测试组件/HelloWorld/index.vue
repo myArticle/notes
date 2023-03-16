@@ -1,12 +1,21 @@
 <template>
   <div class="hello-world">
+    <header-bar></header-bar>
     <div class="hello-world-content" v-if="visible">{{ content }}</div>
     <input type="text" :value="content" @input="onInput" />
+    <footer-bar></footer-bar>
   </div>
 </template>
 
 <script lang="ts">
+import HeaderBar from "../HeaderBar/index.vue";
+import FooterBar from "../FooterBar/index.vue";
 export default {
+  name: "HelloWorld",
+  components: {
+    HeaderBar,
+    FooterBar,
+  },
   props: {
     visible: {
       type: Boolean,

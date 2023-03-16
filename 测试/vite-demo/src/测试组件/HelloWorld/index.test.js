@@ -82,3 +82,44 @@ test('setValue on input', async () => {
         content: 'trigger input'
     });
 })
+
+test('shallow is false', async () => {
+    const wrapper = mount(HelloWorld, {
+        props: {
+            visible: true,
+        },
+        shallow: false,
+
+    });
+
+    expect(wrapper.classes()).toBe('')
+    expect(wrapper.attributes()).toBe('')
+    expect(wrapper.html()).toEqual(`<div data-v-a9034a0d="" class="hello-world">
+  <div data-v-4d69ffda="" data-v-a9034a0d="" class="header">
+    <div data-v-4d69ffda="" class="header-logo">logo</div>
+    <div data-v-4d69ffda="" class="header-title">title</div>
+    <div data-v-f6b4b835="" data-v-4d69ffda="" class="footer">
+      <div data-v-f6b4b835="" class="footer-content">footer</div>
+    </div>
+  </div>
+  <div data-v-a9034a0d="" class="hello-world-content">hello world</div><input data-v-a9034a0d="" type="text">
+  <div data-v-f6b4b835="" data-v-a9034a0d="" class="footer">
+    <div data-v-f6b4b835="" class="footer-content">footer</div>
+  </div>
+</div>`);
+})
+
+test('shallow is true', async () => {
+    const wrapper = mount(HelloWorld, {
+        props: {
+            visible: true,
+        },
+        shallow: true,
+    });
+
+    expect(wrapper.html()).toEqual(`<div data-v-a9034a0d="" class="hello-world">
+  <header-bar-stub data-v-a9034a0d="" logo="logo" title="title"></header-bar-stub>
+  <div data-v-a9034a0d="" class="hello-world-content">hello world</div><input data-v-a9034a0d="" type="text">
+  <footer-bar-stub data-v-a9034a0d="" content="footer"></footer-bar-stub>
+</div>`);
+})
